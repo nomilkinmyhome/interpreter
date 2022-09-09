@@ -16,48 +16,30 @@ struct Token {
     token_value: char,
 }
 
+impl Token {
+    fn new(t_type: TokenType, t_value: char) -> Token {
+        Token{
+            token_type: t_type,
+            token_value: t_value,
+        }
+    }
+
+    fn cast_to_u32(t_value: char) -> u32 {
+        t_value.to_digit(10).unwrap()
+    }
+}
+
 fn tokenize(expression: &str) -> impl Iterator<Item = Token> {
     let mut tokens: Vec<Token> = Vec::with_capacity(expression.len());
     for token in expression.chars() {
         if token.is_digit(10) {
-            tokens.push(Token {
-                token_type: TokenType::Integer,
-                token_value: token,
-            });
+            tokens.push(Token::new(TokenType::Integer, token));
         } else {
             match token {
-                '+' => {
-                    tokens.push(
-                        Token {
-                            token_type: TokenType::Plus,
-                            token_value: token,
-                        }
-                    );
-                },
-                '-' => {
-                    tokens.push(
-                        Token {
-                            token_type: TokenType::Minus,
-                            token_value: token,
-                        }
-                    );
-                },
-                '*' => {
-                    tokens.push(
-                        Token {
-                            token_type: TokenType::Mul,
-                            token_value: token,
-                        }
-                    );
-                },
-                '/' => {
-                    tokens.push(
-                        Token {
-                            token_type: TokenType::Div,
-                            token_value: token,
-                        }
-                    );
-                },
+                '+' => { tokens.push(Token::new(TokenType::Plus, token)); },
+                '-' => { tokens.push(Token::new(TokenType::Minus, token)); },
+                '*' => { tokens.push(Token::new(TokenType::Mul, token)); },
+                '/' => { tokens.push(Token::new(TokenType::Div, token)); },
                 _ => { }
             };
         }
@@ -65,16 +47,12 @@ fn tokenize(expression: &str) -> impl Iterator<Item = Token> {
     tokens.into_iter()
 }
 
-fn cast_token_to_u32(token: char) -> u32 {
-    token.to_digit(10).unwrap()
-}
-
 fn execute(mut tokens: impl Iterator<Item = Token>) {
     let tokens = tokens.collect::<Vec::<_>>();
     let operator = tokens[1].token_type;
 
-    let first = cast_token_to_u32(tokens[0].token_value);
-    let second = cast_token_to_u32(tokens[2].token_value);
+    let first = Token::cast_to_u32(tokens[0].token_value);
+    let second = Token::cast_to_u32(tokens[2].token_value);
     match operator {
         TokenType::Plus => {
             println!("{}", first + second);
