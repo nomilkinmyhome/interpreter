@@ -1,5 +1,3 @@
-#![feature(exact_size_is_empty)]
-
 use std::io::{stdin, Read};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
