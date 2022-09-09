@@ -6,7 +6,7 @@ enum TokenType {
     Minus,
     Mul,
     Div,
-    Integer
+    Integer,
 }
 
 struct Token {
@@ -26,14 +26,23 @@ impl Token {
         t_value.parse::<u32>().unwrap()
     }
 
-    fn match_operator(t_value: char) -> Token {
+    fn match_operator(t_value: char, mut tokens: Vec<Token>) -> Vec<Token> {
         match t_value {
-            '+' => { Token::new(TokenType::Plus, token.to_string()) },
-            '*' => { Token::new(TokenType::Mul, token.to_string()) },
-            '/' => { Token::new(TokenType::Div, token.to_string()) },
-            '-' => { Token::new(TokenType::Minus, token.to_string()) },
-            _ => { }
-        }
+            '+' => { tokens.push(
+                Token::new(TokenType::Plus, t_value.to_string())
+            ); },
+            '*' => { tokens.push(
+                Token::new(TokenType::Mul, t_value.to_string())
+            ); },
+            '/' => { tokens.push(
+                Token::new(TokenType::Div, t_value.to_string())
+            ); },
+            '-' => { tokens.push(
+                Token::new(TokenType::Minus, t_value.to_string())
+            ); },
+            _ => { },
+        };
+        tokens
     }
 }
 
@@ -43,7 +52,7 @@ fn tokenize(expression: &str) -> impl Iterator<Item = Token> {
         if token.is_digit(10) {
             tokens.push(Token::new(TokenType::Integer, token.to_string()));
         } else {
-            tokens.push(Token::match_operator(token));
+            tokens = Token::match_operator(token, tokens);
         }
     }
     tokens.into_iter()
