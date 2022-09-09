@@ -25,6 +25,16 @@ impl Token {
     fn cast_to_u32(t_value: &String) -> u32 {
         t_value.parse::<u32>().unwrap()
     }
+
+    fn match_operator(t_value: char) -> Token {
+        match t_value {
+            '+' => { Token::new(TokenType::Plus, token.to_string()) },
+            '*' => { Token::new(TokenType::Mul, token.to_string()) },
+            '/' => { Token::new(TokenType::Div, token.to_string()) },
+            '-' => { Token::new(TokenType::Minus, token.to_string()) },
+            _ => { }
+        }
+    }
 }
 
 fn tokenize(expression: &str) -> impl Iterator<Item = Token> {
@@ -33,21 +43,7 @@ fn tokenize(expression: &str) -> impl Iterator<Item = Token> {
         if token.is_digit(10) {
             tokens.push(Token::new(TokenType::Integer, token.to_string()));
         } else {
-            match token {
-                '+' => { tokens.push(Token::new(
-                    TokenType::Plus, token.to_string()
-                )); },
-                '-' => { tokens.push(Token::new(
-                    TokenType::Minus, token.to_string()
-                )); },
-                '*' => { tokens.push(Token::new(
-                    TokenType::Mul, token.to_string()
-                )); },
-                '/' => { tokens.push(Token::new(
-                    TokenType::Div, token.to_string()
-                )); },
-                _ => { }
-            };
+            tokens.push(Token::match_operator(token));
         }
     }
     tokens.into_iter()
