@@ -1,4 +1,4 @@
-use std::io::{stdin, Read};
+use std::io::{stdin, Read, Write};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum TokenType {
@@ -87,7 +87,8 @@ fn execute(mut tokens: impl Iterator<Item = Token>) {
 
 fn main() {
     loop {
-        println!("-> ");
+        print!("-> ");
+        std::io::stdout().flush().unwrap();
         let mut expression = String::new();
         stdin().read_line(&mut expression).unwrap();
 
